@@ -98,7 +98,7 @@ impl App {
         ).into()
         };
 
-        let settins_page = ||{
+        let settings_page = ||{
             container(column![
                     "settings_page",
                     navigation(),
