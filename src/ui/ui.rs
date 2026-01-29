@@ -135,7 +135,7 @@ impl App {
             Page::Login => login_page(),
             Page::Home => home_page(),
             Page::Servers => servers_page(),
-            Page::Settings => settins_page(),
+            Page::Settings => settings_page(),
         }
     }
 }
