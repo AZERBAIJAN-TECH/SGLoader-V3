@@ -1,4 +1,4 @@
-use iced::{Alignment::Center, Element, Length::Fill, Theme, widget::{button, column, container, row, scrollable, text_input}};
+use iced::{Alignment::Center, Element, Length::Fill, Theme, widget::{button, column, container, row, scrollable, text_input}, Bottom};
 
 //data
 struct App {
@@ -18,7 +18,7 @@ enum Message {
 //UI MAIN
 pub fn start_app() -> iced::Result {
     iced::application(App::new, App::update, App::view)
-    .theme(Theme::Dark)
+    .theme(Theme::CatppuccinMocha)
     .window_size(iced::Size::new(640.0, 480.0))
     .title("SGLoader")
     .run()
@@ -64,17 +64,22 @@ impl App {
                     button("Servers").on_press(Message::SwitchPage(Page::Servers)),
                     button("Settings").on_press(Message::SwitchPage(Page::Settings)),
                 ]
+                .spacing(3)
             )
             .width(Fill)
-            .height(100)
+            .height(Fill)
             .into()
         };
 
         let home_page = ||{
-            container(column![
-                "home_page",
-                navigation(),
-            ])
+            container(
+                column![
+                    "home_page",
+                    navigation(),
+                ]
+                .spacing(10)
+                .padding(10)
+            )
             .width(Fill)
             .height(Fill)
             .into()
@@ -94,15 +99,20 @@ impl App {
                     .height(Fill),
 
                     navigation()
-            ]
-        ).into()
+                ]
+                .spacing(10)
+                .padding(10)
+            ).into()
         };
 
         let settings_page = ||{
-            container(column![
+            container(
+                column![
                     "settings_page",
                     navigation(),
                 ]
+                .spacing(10)
+                .padding(10)
             )
             .width(Fill)
             .height(Fill)
