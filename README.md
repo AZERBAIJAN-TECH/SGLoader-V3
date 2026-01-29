@@ -2,7 +2,7 @@
 - [ ] UI(LOGIN HOME SERVERS SETTINGS):
 - [ ] HOME
 - [ ] SERVERS
-- [X] LOGIN
+- [ ] LOGIN
 - [ ] SETTINGS
 - [ ] MULTIACCOUNT
 - [ ] CONNECTER
