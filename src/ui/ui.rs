@@ -1,4 +1,4 @@
-use iced::{Alignment::Center, Element, Length::Fill, Theme, widget::{button, column, container, text_input}};
+use iced::{Alignment::Center, Element, Length::Fill, Theme, widget::{button, column, container, row, scrollable, text_input}};
 
 //data
 struct App {
@@ -56,7 +56,59 @@ impl App {
 
     //render ui
     fn view(&self) -> Element<'_, Message> {
+
+        let navigation = || -> Element<'_, Message>{
+            container(
+                row![
+                    button("Home").on_press(Message::SwitchPage(Page::Home)),
+                    button("Servers").on_press(Message::SwitchPage(Page::Servers)),
+                    button("Settings").on_press(Message::SwitchPage(Page::Settings)),
+                ]
+            )
+            .width(Fill)
+            .height(100)
+            .into()
+        };
+
+        let home_page = ||{
+            container(column![
+                "home_page",
+                navigation(),
+            ])
+            .width(Fill)
+            .height(Fill)
+            .into()
+        };
         
+
+
+        let servers_page = ||{
+            container(
+                column![
+                    container(
+                        scrollable(
+                            "servers_page"
+                        ),
+                    )
+                    .width(Fill)
+                    .height(Fill),
+
+                    navigation()
+            ]
+        ).into()
+        };
+
+        let settins_page = ||{
+            container(column![
+                    "settings_page",
+                    navigation(),
+                ]
+            )
+            .width(Fill)
+            .height(Fill)
+            .into()
+        };
+
         let login_page= ||{
             container(
                 column![
@@ -65,8 +117,9 @@ impl App {
                         .width(200),
                     text_input("pass", &self.login_form.password)
                         .on_input(|pass| Message::InputPass(pass.to_string()))
-                        .width(200),
-                    button("Submit") //todo,
+                        .width(200)
+                        .secure(true),
+                    button("Submit").on_press(Message::SwitchPage(Page::Home)),//todo
                 ]
                 .align_x(Center)
                 .spacing(10)
@@ -78,13 +131,11 @@ impl App {
             .into()
         };
 
-        let servers_page = ||{
-            container("nigga").into()
-        };
-
         match self.page {
             Page::Login => login_page(),
+            Page::Home => home_page(),
             Page::Servers => servers_page(),
+            Page::Settings => settins_page(),
         }
     }
 }
@@ -98,9 +149,9 @@ pub struct Login {
 #[derive(Clone)]
 pub enum Page {
     Login,
-    //Home,
+    Home,
     Servers,
-    //Options,
+    Settings,
 }
 
 impl App {
