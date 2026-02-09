@@ -1,4 +1,6 @@
-use iced::{Alignment::Center, Element, Length::Fill, Theme, widget::{button, column, container, row, scrollable, text_input}, Bottom};
+use iced::{Alignment::Center, Bottom, Element, Length::Fill, Task, Theme, widget::{button, column, container, row, scrollable, text_input}};
+
+use crate::api::auth::attemt_login;
 
 //data
 struct App {
@@ -13,6 +15,7 @@ enum Message {
     InputCkey(String),
     InputPass(String),
     LoginSubmit,
+    LoginResult(bool),
 }
 
 //UI MAIN
@@ -34,29 +37,51 @@ impl App {
     }
 
     //how react to messages
-    fn update(&mut self, messages: Message) {
+    fn update(&mut self, messages: Message) -> iced::Task<Message> {
         match messages {
             Message::InputCkey(ckey) => {
-                self.login_form.username = ckey
+                self.login_form.username = ckey;
+                Task::none()
             },
 
             Message::InputPass(pass) => {
-                self.login_form.password = pass
+                self.login_form.password = pass;
+                Task::none()
             },
 
             Message::SwitchPage(page) => {
-                self.page = page
+                self.page = page;
+                Task::none()
             }
 
             Message::LoginSubmit => {
-                todo!()
+                let future = attemt_login(
+                    self.login_form.username.clone(),
+                    self.login_form.password.clone(),
+                );
+
+                Task::perform(future, |result| {
+                    match result {
+                        Ok(success) => Message::LoginResult(success),
+                        Err(e) => {
+                            eprintln!("Login failed: {}", e);
+                            Message::LoginResult(false)
+                        }
+                    }
+                })
+            }
+
+            Message::LoginResult(result) => {
+                if result {
+                    self.page = Page::Home;
+                }
+                Task::none()
             }
         }
     }
 
     //render ui
     fn view(&self) -> Element<'_, Message> {
-
         let navigation = || -> Element<'_, Message>{
             container(
                 row![
@@ -84,8 +109,6 @@ impl App {
             .height(Fill)
             .into()
         };
-        
-
 
         let servers_page = ||{
             container(
@@ -102,7 +125,8 @@ impl App {
                 ]
                 .spacing(10)
                 .padding(10)
-            ).into()
+            )
+            .into()
         };
 
         let settings_page = ||{
@@ -129,7 +153,7 @@ impl App {
                         .on_input(|pass| Message::InputPass(pass.to_string()))
                         .width(200)
                         .secure(true),
-                    button("Submit").on_press(Message::SwitchPage(Page::Home)),//todo
+                    button("Submit").on_press(Message::LoginSubmit),
                 ]
                 .align_x(Center)
                 .spacing(10)
@@ -162,8 +186,4 @@ pub enum Page {
     Home,
     Servers,
     Settings,
-}
-
-impl App {
-    //OTHER FUNCS (DONT FORGET ABOUT PUB)
 }
