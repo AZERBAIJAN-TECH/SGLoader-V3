@@ -1,6 +1,6 @@
 use iced::{Alignment::Center, Bottom, Element, Length::Fill, Task, Theme, widget::{button, column, container, row, scrollable, text_input}};
 
-use crate::api::auth::attemt_login;
+use crate::api::auth::attempt_login;
 
 //data
 struct App {
@@ -55,7 +55,7 @@ impl App {
             }
 
             Message::LoginSubmit => {
-                let future = attemt_login(
+                let future = attempt_login(
                     self.login_form.username.clone(),
                     self.login_form.password.clone(),
                 );
