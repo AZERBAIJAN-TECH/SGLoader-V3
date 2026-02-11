@@ -31,7 +31,7 @@ pub struct AuthResponse {
     expireTime: String
 }
 
-pub async fn attemt_login(username: String, password: String) -> Result<bool, Error> {
+pub async fn attempt_login(username: String, password: String) -> Result<bool, Error> {
     let url = format!("{}/api/auth/authenticate", AUTH_URL.trim_end_matches('/'));
 
     let client = Client::new();
